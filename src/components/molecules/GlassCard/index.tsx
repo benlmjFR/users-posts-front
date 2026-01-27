@@ -1,10 +1,1 @@
-import type { ReactNode } from 'react';
-
-interface GlassCardProps {
-  children: ReactNode;
-  className?: string;
-}
-
-export function GlassCard({ children, className = '' }: GlassCardProps) {
-  return <div className={`glass-card ${className}`.trim()}>{children}</div>;
-}
+export { GlassCard } from './GlassCard';
