@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, Suspense } from "react";
 import Link from "next/link";
 import { GlassCard } from "@/components/molecules/GlassCard";
-import styles from "../error.module.scss";
+import styles from "../../error.module.scss";
 
 function CallbackContent() {
   const router = useRouter();
@@ -23,7 +23,6 @@ function CallbackContent() {
     router.replace("/profile");
   }, [token, error, router]);
 
-  // ❌ ERREUR OAuth
   if (error) {
     return (
       <main className={styles.wrapper}>
@@ -43,7 +42,6 @@ function CallbackContent() {
     );
   }
 
-  // ❌ AUCUN TOKEN
   if (!token) {
     return (
       <main className={styles.wrapper}>
@@ -63,7 +61,6 @@ function CallbackContent() {
     );
   }
 
-  // ⏳ SUCCÈS (avant redirection)
   return (
     <main className={styles.wrapper}>
       <p className={styles.message}>Connexion réussie, redirection…</p>
