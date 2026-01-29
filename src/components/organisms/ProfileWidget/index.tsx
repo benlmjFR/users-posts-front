@@ -1,5 +1,5 @@
-import { GlassCard } from '@/components/molecules/GlassCard';
-import type { User } from '@/types/user';
+import { GlassCard } from "@/components/molecules/GlassCard";
+import type { User } from "@/types/user";
 
 interface ProfileWidgetProps {
   user: User;
@@ -8,8 +8,9 @@ interface ProfileWidgetProps {
 export function ProfileWidget({ user }: ProfileWidgetProps) {
   return (
     <GlassCard>
-      <h3>{user.name}</h3>
-      <p>{user.email}</p>
+      <h3>name: {user.name?.length ? user.name : "-"}</h3>
+      <p>email: {user.email}</p>
+      <p>role: {user.role}</p>
     </GlassCard>
   );
 }

@@ -4,13 +4,11 @@ export const api = async <T = unknown>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<T> => {
-  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-
   const res = await fetch(`${API_URL}${endpoint}`, {
     ...options,
+    credentials: "include",
     headers: {
       'Content-Type': 'application/json',
-      ...(token && { Authorization: `Bearer ${token}` }),
       ...options.headers,
     },
   });
@@ -18,3 +16,4 @@ export const api = async <T = unknown>(
   if (!res.ok) throw new Error('API error');
   return res.json();
 };
+
