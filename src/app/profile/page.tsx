@@ -15,7 +15,7 @@ export default function ProfilePage() {
   console.log({ user });
 
   useEffect(() => {
-    api("/users/profile")
+    api<User>("/users/profile")
       .then(setUser)
       .catch(() => router.replace("/"))
       .finally(() => setLoading(false));
