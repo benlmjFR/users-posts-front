@@ -10,6 +10,7 @@ import { User } from "@/types/user";
 import { Post } from "@/types/post";
 import { Button } from "@/components/atoms/Button";
 import { UserPostsWidget } from "@/components/organisms/UserPostsWidget";
+import { AuthButton } from "@/components/molecules/AuthButton/AuthButton/AuthButton";
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -52,10 +53,19 @@ export default function ProfilePage() {
         }}
       >
         <h2>Mon profil</h2>
-        <Button
-          label="Voir tous les posts"
-          onClick={() => router.push("/posts")}
-        />
+        <div
+          style={{
+            padding: 40,
+            display: "flex",
+            gap: 20,
+          }}
+        >
+          <Button
+            label="Voir tous les posts"
+            onClick={() => router.push("/posts")}
+          />
+          <AuthButton />
+        </div>
       </div>
 
       <GlassCard>

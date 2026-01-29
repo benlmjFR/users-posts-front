@@ -1,6 +1,25 @@
+export interface Author {
+  id: number;
+  email: string;
+}
+
+export interface Media {
+  id: number;
+  url: string;
+  type: "PDF" | "VIDEO";
+}
+
 export interface Post {
   id: number;
-  userId: number;
   title: string;
-  body: string;
+  content: string;
+  published: boolean;
+  createdAt: string;
+  updatedAt: string;
+
+  authorId: number;
+  author: Author;
+
+  medias: Media[];
 }
+
