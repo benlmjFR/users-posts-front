@@ -1,0 +1,21 @@
+@use "../../../../styles/index" as *;
+
+.actions {
+  display: flex;
+  gap: 8px;
+  flex-direction: column;
+}
+
+@include sm {
+  .actions {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    margin-left: auto;
+    gap: 20px;
+  }
+
+  .actions button {
+    max-width: auto;
+  }
+}

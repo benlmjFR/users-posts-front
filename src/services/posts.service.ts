@@ -1,5 +1,5 @@
 import { api } from './api';
-import type { Post } from '@/types/post';
+import type { Post, UpdatePostDto } from '@/types/post';
 
 export const postsService = {
   async getMine(): Promise<Post[]> {
@@ -8,4 +8,51 @@ export const postsService = {
   async getAll(): Promise<Post[]> {
     return api<Post[]>('/posts');
   },
+
+  async update(
+    postId: number,
+    dto: UpdatePostDto,
+  ): Promise<Post> {
+    return api<Post>(`/posts/${postId}`, {
+      method: 'PATCH',
+      body: JSON.stringify(dto),
+    });
+  },
+
+  async remove(postId: number): Promise<void> {
+    return api<void>(`/posts/${postId}`, {
+      method: 'DELETE',
+    });
+  },
+
+  async uploadMedia(
+    postId: number,
+    files: {
+      pdfs?: File[];
+      video?: File;
+    },
+  ) {
+    const formData = new FormData();
+
+    files.pdfs?.forEach((pdf) =>
+      formData.append('pdfs', pdf),
+    );
+
+    if (files.video) {
+      formData.append('video', files.video);
+    }
+
+    return api(`/posts/${postId}/media`, {
+      method: 'POST',
+      body: formData,
+      // isMultipart: true,
+    });
+  },
+
+  async removeMedia(mediaId: number): Promise<void> {
+    return api<void>(`/posts/media/${mediaId}`, {
+      method: 'DELETE',
+    });
+  },
 };
+

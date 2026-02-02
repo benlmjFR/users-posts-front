@@ -31,11 +31,36 @@ export default function ProfilePage() {
 
     postsService
       .getMine()
-      .then(setPosts)
+      .then((data) =>
+        setPosts(
+          data.map((p) => ({
+            ...p,
+            medias: p.medias ?? [],
+          })),
+        ),
+      )
       .catch((err: unknown) => {
         console.error("Erreur chargement posts", err);
       });
   }, [user]);
+
+  const handlePostUpdated = (updated: Post) => {
+    setPosts((prev) =>
+      prev.map((p) =>
+        p.id === updated.id
+          ? {
+              ...p,
+              ...updated,
+              medias: updated.medias ?? p.medias ?? [],
+            }
+          : p,
+      ),
+    );
+  };
+
+  const handlePostDeleted = (id: number) => {
+    setPosts((prev) => prev.filter((p) => p.id !== id));
+  };
 
   if (loading) {
     return <p style={{ padding: 40 }}>Vérification…</p>;
@@ -50,12 +75,14 @@ export default function ProfilePage() {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          flexWrap: "wrap",
+          gap: 20,
         }}
       >
         <h2>Mon profil</h2>
+
         <div
           style={{
-            padding: 40,
             display: "flex",
             gap: 20,
           }}
@@ -73,7 +100,11 @@ export default function ProfilePage() {
         {user && <ProfileWidget user={user} />}
       </GlassCard>
 
-      <UserPostsWidget posts={posts} />
+      <UserPostsWidget
+        posts={posts}
+        onPostUpdated={handlePostUpdated}
+        onPostDeleted={handlePostDeleted}
+      />
     </main>
   );
 }

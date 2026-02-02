@@ -10,10 +10,35 @@ export default function PostsPage() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const handlePostUpdated = (updated: Post) => {
+    setPosts((prev) =>
+      prev.map((p) =>
+        p.id === updated.id
+          ? {
+              ...p,
+              ...updated,
+              medias: updated.medias ?? p.medias ?? [],
+            }
+          : p,
+      ),
+    );
+  };
+
+  const handlePostDeleted = (id: number) => {
+    setPosts((prev) => prev.filter((p) => p.id !== id));
+  };
+
   useEffect(() => {
     postsService
       .getAll()
-      .then(setPosts)
+      .then((data) =>
+        setPosts(
+          data.map((p) => ({
+            ...p,
+            medias: p.medias ?? [],
+          })),
+        ),
+      )
       .finally(() => setLoading(false));
   }, []);
 
@@ -21,27 +46,27 @@ export default function PostsPage() {
 
   return (
     <main style={{ padding: 40 }}>
-      {/* HEADER */}
       <header
         style={{
           display: "flex",
           justifyContent: "space-between",
-          alignItems: "center",
           marginBottom: 24,
         }}
       >
         <h2>Tous les posts</h2>
-
-        <div style={{ display: "flex", gap: 12 }}>
-          <AuthButton />
-        </div>
+        <AuthButton />
       </header>
 
       {posts.length === 0 && <p>Aucun post.</p>}
 
-      <div style={{ display: "grid", gap: 20, marginTop: 20 }}>
+      <div style={{ display: "grid", gap: 20 }}>
         {posts.map((post) => (
-          <PostItem key={post.id} post={post} />
+          <PostItem
+            key={post.id}
+            post={post}
+            onUpdated={handlePostUpdated}
+            onDeleted={handlePostDeleted}
+          />
         ))}
       </div>
     </main>

@@ -1,6 +1,7 @@
 export interface Author {
   id: number;
   email: string;
+  role: string
 }
 
 export interface Media {
@@ -21,5 +22,11 @@ export interface Post {
   author: Author;
 
   medias: Media[];
+}
+
+export interface UpdatePostDto {
+  title?: string;
+  content?: string;
+  published?: boolean;
 }
 

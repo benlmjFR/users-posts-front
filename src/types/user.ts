@@ -1,6 +1,8 @@
+export type Role = "USER" | "ADMIN" | "SUPER_ADMIN";
+
 export interface User {
   id: number;
-  name: string;
+  name?: string;
   email: string;
-  role?: string;
+  role: Role;
 }

@@ -1,8 +1,9 @@
 "use client";
 
 import { Button } from "@/components/atoms/Button";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/context/useAuth";
 import { usePathname, useRouter } from "next/navigation";
+import styles from "./AuthButton.module.scss";
 
 export function AuthButton() {
   const auth = useAuth();
@@ -13,12 +14,12 @@ export function AuthButton() {
 
   if (auth.isAuthenticated) {
     return (
-      <>
+      <div className={styles.actions}>
         {pathname !== "/profile" && (
           <Button label="Profil" onClick={() => router.push("/profile")} />
         )}
         <Button label="Logout" onClick={auth.logout} />
-      </>
+      </div>
     );
   }
 
