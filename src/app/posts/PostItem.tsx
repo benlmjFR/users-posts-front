@@ -45,7 +45,7 @@ export function PostItem({ post, onUpdated, onDeleted }: Props) {
             <div className={styles.headerRight}>
               <span>le {new Date(post.createdAt).toLocaleDateString()}</span>
 
-              {canEdit && (
+              {!canEdit && (
                 <div className={styles.actions}>
                   <button onClick={() => setEditOpen(true)}>
                     <Pencil size={16} />

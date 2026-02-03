@@ -23,6 +23,8 @@ export function AuthButton() {
     );
   }
 
+  console.log(auth.isAuthenticated);
+
   return (
     <Button
       label="Login"

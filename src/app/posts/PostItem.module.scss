@@ -1,3 +1,5 @@
+@use "../../styles/index" as *;
+
 .post {
   position: relative;
   display: flex;
@@ -5,19 +7,16 @@
   gap: 12px;
 }
 
-/* ⚠️ Post non publié */
 .unpublished {
   filter: blur(6px);
   user-select: none;
 
-  /* On garde les actions admin cliquables */
   .actions {
     pointer-events: auto;
     filter: none;
   }
 }
 
-/* Badge "Non publié" */
 .badge {
   position: absolute;
   top: 12px;
@@ -30,16 +29,25 @@
   font-size: 0.75rem;
 }
 
-/* Header */
 .header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+}
+
+@include md {
+  .header {
+    flex-direction: row;
+    align-items: center;
+  }
+  .headerRight {
+    margin-left: auto;
+  }
 }
 
 .headerRight {
   display: flex;
   align-items: center;
+  margin-left: none;
   gap: 12px;
 }
 
