@@ -10,9 +10,9 @@ import {
 
 interface AuthContextValue {
   user: User | null;
-  isAuthenticated: boolean;
+  isAuthenticated: boolean | null;
   login: (email: string, password: string) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextValue | undefined>(
@@ -21,12 +21,18 @@ export const AuthContext = createContext<AuthContextValue | undefined>(
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const isAuthenticated = Boolean(user);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
   useEffect(() => {
     const init = async () => {
-      const me = await getCurrentUser();
-      setUser(me);
+      try {
+        const me = await getCurrentUser();
+        setUser(me);
+        setIsAuthenticated(true);
+      } catch {
+        setUser(null);
+        setIsAuthenticated(false);
+      }
     };
 
     init();
@@ -35,11 +41,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async (email: string, password: string) => {
     const me = await loginRequest(email, password);
     setUser(me);
+    setIsAuthenticated(true);
   };
 
-  const logout = () => {
-    logoutRequest();
+  const logout = async () => {
+    await logoutRequest();
     setUser(null);
+    setIsAuthenticated(false);
+    window.location.href = "/";
   };
 
   return (
