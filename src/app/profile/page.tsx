@@ -91,14 +91,6 @@ export default function ProfilePage() {
 
       <UserPostsWidget
         posts={posts}
-        onPostUpdated={(updated) =>
-          setPosts((prev) =>
-            prev.map((p) => (p.id === updated.id ? updated : p)),
-          )
-        }
-        onPostDeleted={(id) =>
-          setPosts((prev) => prev.filter((p) => p.id !== id))
-        }
         onPostsRefresh={fetchMyPosts}
       />
     </main>

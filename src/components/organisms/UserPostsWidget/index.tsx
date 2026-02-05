@@ -8,15 +8,11 @@ import { PostItem } from "@/app/posts/PostItem";
 
 interface Props {
   posts: Post[];
-  onPostUpdated: (post: Post) => void;
-  onPostDeleted: (id: number) => void;
   onPostsRefresh: () => void;
 }
 
 export function UserPostsWidget({
   posts,
-  onPostUpdated,
-  onPostDeleted,
   onPostsRefresh,
 }: Props) {
   const [createOpen, setCreateOpen] = useState(false);
