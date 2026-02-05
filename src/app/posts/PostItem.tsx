@@ -82,7 +82,10 @@ export function PostItem({ post, onUpdated, onDeleted }: Props) {
         <EditPostModal
           post={post}
           onClose={() => setEditOpen(false)}
-          onUpdated={onUpdated}
+          onUpdated={(updatedPost) => {
+            onUpdated?.(updatedPost);
+            setEditOpen(false);
+          }}
         />
       )}
 

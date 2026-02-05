@@ -42,8 +42,8 @@ export function UserPostsWidget({
           <PostItem
             key={post.id}
             post={post}
-            onUpdated={onPostUpdated}
-            onDeleted={onPostDeleted}
+            onUpdated={() => onPostsRefresh()}   
+            onDeleted={() => onPostsRefresh()}  
           />
         ))}
       </div>
