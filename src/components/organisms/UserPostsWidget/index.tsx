@@ -10,14 +10,14 @@ interface Props {
   posts: Post[];
   onPostUpdated: (post: Post) => void;
   onPostDeleted: (id: number) => void;
-  onPostCreated: (post: Post) => void;
+  onPostsRefresh: () => void;
 }
 
 export function UserPostsWidget({
   posts,
   onPostUpdated,
   onPostDeleted,
-  onPostCreated,
+  onPostsRefresh,
 }: Props) {
   const [createOpen, setCreateOpen] = useState(false);
 
@@ -51,7 +51,10 @@ export function UserPostsWidget({
       {createOpen && (
         <CreatePostModal
           onClose={() => setCreateOpen(false)}
-          onCreated={onPostCreated}
+          onCreated={() => {
+            setCreateOpen(false);
+            onPostsRefresh(); 
+          }}
         />
       )}
     </>

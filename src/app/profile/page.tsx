@@ -17,6 +17,15 @@ export default function ProfilePage() {
 
   const [posts, setPosts] = useState<Post[]>([]);
 
+  const fetchMyPosts = async () => {
+    const data = await postsService.getMine();
+    setPosts(data);
+  };
+  
+  useEffect(() => {
+    fetchMyPosts();
+  }, []);
+
   // 🔐 Protection de la page
   useEffect(() => {
     if (!isLoading && !user) {
@@ -90,9 +99,7 @@ export default function ProfilePage() {
         onPostDeleted={(id) =>
           setPosts((prev) => prev.filter((p) => p.id !== id))
         }
-        onPostCreated={(post) =>
-          setPosts((prev) => [post, ...prev])
-        }
+        onPostsRefresh={fetchMyPosts}
       />
     </main>
   );

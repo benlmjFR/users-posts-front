@@ -22,39 +22,35 @@ export function CreatePostModal({ onClose, onCreated }: Props) {
   const handleCreate = async () => {
     setLoading(true);
     setError(null);
-
-    let post: Post;
-
+  
     try {
-      post = await postsService.create({
+      const post = await postsService.create({
         title,
         content,
         published,
       });
-    } catch (e) {
-      setError(`Erreur lors de la création du post: ${e}`);
-      setLoading(false);
-      return;
-    }
-
-    try {
+  
       if (pdfs.length > 0 || video) {
-        await postsService.uploadMedia(post.id, {
-          pdfs,
-          video,
-        });
+        try {
+          await postsService.uploadMedia(post.id, { pdfs, video });
+        } catch (e) {
+          console.warn("Upload média échoué", e);
+        }
       }
-      const finalPost = await postsService.getOne(post.id);
-
-      onCreated(finalPost);
+  
+      onCreated({
+        ...post,
+        medias: [],
+      });
+  
       onClose();
     } catch (e) {
-      console.error(e);
-      setError("Post créé, mais erreur lors de la récupération finale.");
+      setError("Erreur lors de la création du post.");
     } finally {
       setLoading(false);
     }
   };
+  
 
   return (
     <div className={styles.overlay} onClick={onClose}>
