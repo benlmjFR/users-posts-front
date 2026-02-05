@@ -10,6 +10,8 @@ import { Pencil, Trash2 } from "lucide-react";
 import { useAuth } from "@/context/useAuth";
 import { EditPostModal } from "./EditPostModal";
 import { DeletePostModal } from "./DeletePostModal";
+import { usePathname } from "next/navigation";
+
 
 interface Props {
   post: Post;
@@ -27,6 +29,8 @@ export function PostItem({ post, onUpdated, onDeleted }: Props) {
 
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const pathname = usePathname();
+
 
   return (
     <>
@@ -45,7 +49,7 @@ export function PostItem({ post, onUpdated, onDeleted }: Props) {
             <div className={styles.headerRight}>
               <span>le {new Date(post.createdAt).toLocaleDateString()}</span>
 
-              {canEdit && (
+              {canEdit && pathname === "/profile" && (
                 <div className={styles.actions}>
                   <button onClick={() => setEditOpen(true)}>
                     <Pencil size={16} />
