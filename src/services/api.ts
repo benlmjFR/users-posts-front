@@ -5,7 +5,6 @@ export async function api<T>(
   options: RequestInit = {},
 ): Promise<T> {
   const token = localStorage.getItem("access_token");
-
   const isFormData = options.body instanceof FormData;
 
   const res = await fetch(`${API_URL}${endpoint}`, {
@@ -16,6 +15,10 @@ export async function api<T>(
       ...options.headers,
     },
   });
+
+  if (res.status === 401) {
+    throw new Error("UNAUTHORIZED");
+  }
 
   if (!res.ok) {
     const text = await res.text();

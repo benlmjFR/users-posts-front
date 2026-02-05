@@ -2,30 +2,29 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { api } from "@/services/api";
 import { postsService } from "@/services/posts.service";
 import { GlassCard } from "@/components/molecules/GlassCard";
 import { ProfileWidget } from "@/components/organisms/ProfileWidget";
-import { User } from "@/types/user";
-import { Post } from "@/types/post";
-import { Button } from "@/components/atoms/Button";
 import { UserPostsWidget } from "@/components/organisms/UserPostsWidget";
+import { Button } from "@/components/atoms/Button";
 import { AuthButton } from "@/components/molecules/AuthButton/AuthButton/AuthButton";
+import { Post } from "@/types/post";
+import { useAuth } from "@/context/useAuth";
 
 export default function ProfilePage() {
   const router = useRouter();
+  const { user, isLoading } = useAuth();
 
-  const [user, setUser] = useState<User | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
-  const [loading, setLoading] = useState(true);
 
+  // 🔐 Protection de la page
   useEffect(() => {
-    api<User>("/users/profile")
-      .then(setUser)
-      .catch(() => router.replace("/"))
-      .finally(() => setLoading(false));
-  }, [router]);
+    if (!isLoading && !user) {
+      router.replace("/");
+    }
+  }, [isLoading, user, router]);
 
+  // 📦 Chargement des posts
   useEffect(() => {
     if (!user) return;
 
@@ -39,41 +38,17 @@ export default function ProfilePage() {
           })),
         ),
       )
-      .catch((err: unknown) => {
+      .catch((err) => {
         console.error("Erreur chargement posts", err);
       });
   }, [user]);
 
-  const handlePostUpdated = (updated: Post) => {
-    setPosts((prev) =>
-      prev.map((p) =>
-        p.id === updated.id
-          ? {
-              ...p,
-              ...updated,
-              medias: updated.medias ?? p.medias ?? [],
-            }
-          : p,
-      ),
-    );
-  };
-
-  const handlePostDeleted = (id: number) => {
-    setPosts((prev) => prev.filter((p) => p.id !== id));
-  };
-
-  const handlePostCreated = (post: Post) => {
-    setPosts((prev) => [
-      {
-        ...post,
-        medias: post.medias ?? [],
-      },
-      ...prev,
-    ]);
-  };
-
-  if (loading) {
+  if (isLoading) {
     return <p style={{ padding: 40 }}>Vérification…</p>;
+  }
+
+  if (!user) {
+    return null; // évite un flash
   }
 
   return (
@@ -91,12 +66,7 @@ export default function ProfilePage() {
       >
         <h2>Mon profil</h2>
 
-        <div
-          style={{
-            display: "flex",
-            gap: 20,
-          }}
-        >
+        <div style={{ display: "flex", gap: 20 }}>
           <Button
             label="Voir tous les posts"
             onClick={() => router.push("/posts")}
@@ -107,14 +77,22 @@ export default function ProfilePage() {
 
       <GlassCard>
         <h2>Mes infos</h2>
-        {user && <ProfileWidget user={user} />}
+        <ProfileWidget user={user} />
       </GlassCard>
 
       <UserPostsWidget
         posts={posts}
-        onPostUpdated={handlePostUpdated}
-        onPostDeleted={handlePostDeleted}
-        onPostCreated={handlePostCreated}
+        onPostUpdated={(updated) =>
+          setPosts((prev) =>
+            prev.map((p) => (p.id === updated.id ? updated : p)),
+          )
+        }
+        onPostDeleted={(id) =>
+          setPosts((prev) => prev.filter((p) => p.id !== id))
+        }
+        onPostCreated={(post) =>
+          setPosts((prev) => [post, ...prev])
+        }
       />
     </main>
   );

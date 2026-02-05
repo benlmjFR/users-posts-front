@@ -12,7 +12,7 @@ export const loginRequest = async (
 
   localStorage.setItem("access_token", res.token);
 
-  return getCurrentUser();
+  return null;
 };
 
 export const registerRequest = async (
@@ -26,7 +26,7 @@ export const registerRequest = async (
 
   localStorage.setItem("access_token", res.token);
 
-  return getCurrentUser();
+  return null;
 };
 
 export const getCurrentUser = async (): Promise<User | null> => {

@@ -13,6 +13,7 @@ interface AuthContextValue {
   isAuthenticated: boolean | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  isLoading: boolean;
 }
 
 export const AuthContext = createContext<AuthContextValue | undefined>(
@@ -22,6 +23,7 @@ export const AuthContext = createContext<AuthContextValue | undefined>(
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const init = async () => {
@@ -32,11 +34,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       } catch {
         setUser(null);
         setIsAuthenticated(false);
+      } finally {
+        setIsLoading(false);
       }
     };
-
+  
     init();
-  }, []);
+  }, []);  
 
   const login = async (email: string, password: string) => {
     const me = await loginRequest(email, password);
@@ -58,6 +62,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         isAuthenticated,
         login,
         logout,
+        isLoading,
       }}
     >
       {children}
