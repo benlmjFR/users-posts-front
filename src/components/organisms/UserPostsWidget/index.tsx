@@ -1,22 +1,43 @@
-import { PostItem } from "@/app/posts/PostItem";
-import { GlassCard } from "@/components/molecules/GlassCard";
-import type { Post } from "@/types/post";
+"use client";
 
-interface UserPostsWidgetProps {
+import { useState } from "react";
+import type { Post } from "@/types/post";
+import { Button } from "@/components/atoms/Button";
+import { CreatePostModal } from "@/app/posts/CreatePostModal";
+import { PostItem } from "@/app/posts/PostItem";
+
+interface Props {
   posts: Post[];
-  onPostUpdated?: (post: Post) => void;
-  onPostDeleted?: (id: number) => void;
+  onPostUpdated: (post: Post) => void;
+  onPostDeleted: (id: number) => void;
+  onPostCreated: (post: Post) => void;
 }
 
 export function UserPostsWidget({
   posts,
   onPostUpdated,
   onPostDeleted,
-}: UserPostsWidgetProps) {
+  onPostCreated,
+}: Props) {
+  const [createOpen, setCreateOpen] = useState(false);
+
   return (
-    <GlassCard>
-      <h3>Mes posts</h3>
-      <div>
+    <>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <h2>Mes posts</h2>
+
+        <Button label="+ Ajouter un post" onClick={() => setCreateOpen(true)} />
+      </div>
+
+      {posts.length === 0 && <p>Aucun post.</p>}
+
+      <div style={{ display: "grid", gap: 20 }}>
         {posts.map((post) => (
           <PostItem
             key={post.id}
@@ -26,6 +47,13 @@ export function UserPostsWidget({
           />
         ))}
       </div>
-    </GlassCard>
+
+      {createOpen && (
+        <CreatePostModal
+          onClose={() => setCreateOpen(false)}
+          onCreated={onPostCreated}
+        />
+      )}
+    </>
   );
 }

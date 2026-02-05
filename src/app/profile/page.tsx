@@ -62,6 +62,16 @@ export default function ProfilePage() {
     setPosts((prev) => prev.filter((p) => p.id !== id));
   };
 
+  const handlePostCreated = (post: Post) => {
+    setPosts((prev) => [
+      {
+        ...post,
+        medias: post.medias ?? [],
+      },
+      ...prev,
+    ]);
+  };
+
   if (loading) {
     return <p style={{ padding: 40 }}>Vérification…</p>;
   }
@@ -104,6 +114,7 @@ export default function ProfilePage() {
         posts={posts}
         onPostUpdated={handlePostUpdated}
         onPostDeleted={handlePostDeleted}
+        onPostCreated={handlePostCreated}
       />
     </main>
   );

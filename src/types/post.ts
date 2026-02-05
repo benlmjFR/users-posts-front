@@ -30,3 +30,9 @@ export interface UpdatePostDto {
   published?: boolean;
 }
 
+export interface CreatePostDto {
+  title: string;
+  content: string;
+  published?: boolean;
+}
+

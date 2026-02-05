@@ -1,5 +1,5 @@
 import { api } from './api';
-import type { Post, UpdatePostDto } from '@/types/post';
+import type { CreatePostDto, Post, UpdatePostDto } from '@/types/post';
 
 export const postsService = {
   async getMine(): Promise<Post[]> {
@@ -7,6 +7,13 @@ export const postsService = {
   },
   async getAll(): Promise<Post[]> {
     return api<Post[]>('/posts');
+  },
+
+    async create(dto: CreatePostDto): Promise<Post> {
+    return api<Post>("/posts", {
+      method: "POST",
+      body: JSON.stringify(dto),
+    });
   },
 
   async update(
@@ -45,9 +52,13 @@ export const postsService = {
     return api(`/posts/${postId}/media`, {
       method: 'POST',
       body: formData,
-      // isMultipart: true,
     });
   },
+
+  async getOne(postId: number): Promise<Post> {
+  return api<Post>(`/posts/${postId}`);
+},
+
 
   async removeMedia(mediaId: number): Promise<void> {
     return api<void>(`/posts/media/${mediaId}`, {
